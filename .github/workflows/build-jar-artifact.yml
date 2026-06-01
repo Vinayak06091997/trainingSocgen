@@ -3,10 +3,10 @@ name: Build Java Jar and Publish Artifact
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -24,14 +24,14 @@ jobs:
 
       - name: Compile Java sources
         run: |
-          javac Demo.java
+          javac SampleDemo.java
 
       - name: Create runnable JAR
         run: |
-          jar cfm Demo.jar manifest.txt Demo.class
+          jar cfm SampleDemo.jar manifest.txt SampleDemo.class
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: demo-jar
-          path: Demo.jar
+          name: sample-demo-jar
+          path: SampleDemo.jar

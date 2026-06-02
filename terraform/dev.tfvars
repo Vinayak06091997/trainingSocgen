@@ -1,0 +1,5 @@
+bucket_name = "vinayak-unique-bucket-name"
+instance_type = "t2.micro"
+region = "us-west-1"
+environment = "dev"
+cidr_block = "10.0.1.0/24"

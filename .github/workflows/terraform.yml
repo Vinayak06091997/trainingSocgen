@@ -22,14 +22,22 @@ jobs:
           aws-region: us-east-1
 
       - name: Terraform Init
-        run: terraform init
+        run: |
+          cd terraform
+          terraform init
 
       - name: Terraform Validate
-        run: terraform validate
+        run: |
+          cd terraform
+          terraform validate
 
       - name: Terraform Plan
-        run: terraform plan
+        run: |
+          cd terraform
+          terraform plan -var-file=dec.tfvrs --out=tfplan
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve
+        run: |
+          cd terraform
+          terraform apply -var-file=dec.tfvrs --out=tfplan    -auto-approve

@@ -1,0 +1,9 @@
+FROM nginx 
+COPY index.html /usr/share/nginx/html/index.html
+EXPOSE 83
+CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+USER nginx
+
+RUN echo "Hello World"
+RUN apt-get update && apt-get install -y curl

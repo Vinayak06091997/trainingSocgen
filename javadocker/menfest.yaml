@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: javadocker-deployment
+  labels:
+    app: javadocker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: javadocker
+  template:
+    metadata:
+      labels:
+        app: javadocker
+    spec:
+      containers:
+        - name: javadocker
+          image: vinayakvpn/javadocker:latest
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: javadocker-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: javadocker
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

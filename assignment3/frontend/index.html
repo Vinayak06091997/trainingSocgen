@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assignment 3 App</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { color: #2b6cb0; }
+    button { margin-top: .5rem; }
+    ul { padding-left: 1.2rem; }
+    .status { margin-top: 1rem; color: #2f855a; }
+  </style>
+</head>
+<body>
+  <h1>Assignment 3 App</h1>
+  <p>This frontend calls the backend API, which stores users in PostgreSQL.</p>
+
+  <button id="refresh">Load users</button>
+  <div class="status" id="status"></div>
+  <ul id="users"></ul>
+
+  <form id="user-form">
+    <label>
+      Name:
+      <input type="text" id="name" placeholder="Enter name" required />
+    </label>
+    <button type="submit">Add user</button>
+  </form>
+
+  <script>
+    const status = document.getElementById('status');
+    const list = document.getElementById('users');
+    const refresh = document.getElementById('refresh');
+    const form = document.getElementById('user-form');
+    const nameInput = document.getElementById('name');
+    const apiBase = '/api';
+
+    const showStatus = (text) => { status.textContent = text; };
+
+    const loadUsers = async () => {
+      try {
+        const res = await fetch(`${apiBase}/users`);
+        const users = await res.json();
+        list.innerHTML = users.map((user) => `<li>${user.name}</li>`).join('');
+        showStatus('Loaded ' + users.length + ' users.');
+      } catch (err) {
+        showStatus('Unable to reach backend.');
+      }
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const name = nameInput.value.trim();
+      if (!name) return;
+      try {
+        const res = await fetch(`${apiBase}/users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name }),
+        });
+        if (res.ok) {
+          nameInput.value = '';
+          await loadUsers();
+          showStatus('User added successfully.');
+        } else {
+          const err = await res.json();
+          showStatus(err.error || 'Failed to add user.');
+        }
+      } catch (err) {
+        showStatus('Unable to reach backend.');
+      }
+    });
+
+    refresh.addEventListener('click', loadUsers);
+    loadUsers();
+  </script>
+</body>
+</html>
